@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import * as dotenv from 'dotenv';
@@ -7,6 +7,7 @@ import * as Joi from 'joi';
 // 传递数组防止默认值绕过Joi的校验
 const envFilePath = [`.env.${process.env.NODE_ENV || 'development'}`, '.env'];
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +29,7 @@ const envFilePath = [`.env.${process.env.NODE_ENV || 'development'}`, '.env'];
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [Logger],
+  exports: [Logger],
 })
 export class AppModule {}
