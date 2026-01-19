@@ -21,7 +21,6 @@ export class UserController {
     console.log('db is', db, db_host, db_domain);
 
     this.logger.log('request get users successful');
-
-    return this.userService.getUsers();
+return ''
   }
 }

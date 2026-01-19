@@ -7,6 +7,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+// 用来记录请求的ip
 import * as requestIp from 'request-ip';
 
 @Catch(HttpException)

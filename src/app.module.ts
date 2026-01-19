@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import * as dotenv from 'dotenv';
 import * as Joi from 'joi';
+import { MongooseModule } from '@nestjs/mongoose';
 
 // 传递数组防止默认值绕过Joi的校验
 const envFilePath = [`.env.${process.env.NODE_ENV || 'development'}`, '.env'];
@@ -27,6 +28,7 @@ const envFilePath = [`.env.${process.env.NODE_ENV || 'development'}`, '.env'];
       }),
     }),
     UserModule,
+    MongooseModule.forRoot('mongodb://localhost:27017/wwzhidao'),
   ],
   controllers: [],
   providers: [Logger],
