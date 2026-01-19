@@ -1,26 +1,38 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ConfigService } from '@nestjs/config';
 import { ConfigEnum } from 'src/enum/config.enum';
+import { User } from './schemas/user.schema';
 
 @Controller('user')
 export class UserController {
   constructor(
     private userService: UserService,
-    private configService: ConfigService,
-    private readonly logger: Logger,
-  ) {
-    this.logger.log('UserController init');
+  ) {}
+
+  @Post()
+  async create(@Body() createUserDto: any): Promise<User> {
+    return this.userService.create(createUserDto);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateUserDto: {name?: string, email?: string}): Promise<User> {
+    return this.userService.update(id.toString(), updateUserDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return this.userService.delete(id.toString());
   }
 
   @Get()
-  getUsers(): any {
-    const db = this.configService.get(ConfigEnum.DB);
-    const db_host = this.configService.get(ConfigEnum.DB_HOST);
-    const db_domain = this.configService.get(ConfigEnum.DB_DOMAIN);
-    console.log('db is', db, db_host, db_domain);
-
-    this.logger.log('request get users successful');
-return ''
+  async findAll() {
+    return this.userService.findAll();
   }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.userService.findOne(id);
+  }
+
 }
