@@ -15,12 +15,11 @@ export class Profile {
 
 const ProfileSchema = SchemaFactory.createForClass(Profile);
 
-
 @Schema({
   timestamps: true,
   toJSON: {
     virtuals: true,
-  }
+  },
 })
 export class User extends Document {
   @Prop({required: true, unique: true, lowercase: true, trim: true, minlength: 3, maxlength: 20, index: true})
@@ -29,14 +28,18 @@ export class User extends Document {
   @Prop({required: true, unique: true, lowercase: true, match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/})
   email: string;
 
-  @Prop({required: true, minlength: 6})
+  @Prop({
+    required: true,
+    minlength: 6,
+  })
   password: string;
 
   @Prop({ type: ProfileSchema })
   profile: Profile;
 
   @Prop({
-    type: [String], default: []
+    type: [String],
+    default: [],
   })
   tags: string[];
 
@@ -50,13 +53,13 @@ export class User extends Document {
 
   @Prop({
     type: Boolean,
-    default: false
+    default: false,
   })
   isAdmin: boolean;
 
   @Prop({
     type: Number,
-    default: 0
+    default: 0,
   })
   loginCount: number;
 
@@ -69,10 +72,10 @@ export class User extends Document {
 export const UserSchema = SchemaFactory.createForClass(User);
 
 // 添加虚拟字段
-UserSchema.virtual('isActive').get(function() {
+UserSchema.virtual('isActive').get(function () {
   return this.status === 'active';
-})
+});
 
 // 创建索引
 UserSchema.index({ username: 1, email: 1 });
-UserSchema.index({ status: 1 })
+UserSchema.index({ status: 1 });
