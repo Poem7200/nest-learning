@@ -106,8 +106,19 @@ UserSchema.post('save', function () {
   console.log(`用户 ${this.username} 已保存`);
 });
 
+UserSchema.pre('findOneAndUpdate', function () {
+  this.set({ updatedAt: new Date() });
+});
+
 UserSchema.methods.comparePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
+};
+
+// 隐藏敏感字段
+UserSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
 };
 
 // 添加虚拟字段
