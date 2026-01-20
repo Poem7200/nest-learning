@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
@@ -10,8 +10,20 @@ export class UserService {
   ) {}
 
   async create(createUserDto: any): Promise<User> {
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    return this.userModel.create(createUserDto);
+  }
+
+  async validatePassword(username: string, password: string): Promise<User | null> {
+    const user = await this.userModel.findOne({ username });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    const isValid = await user.comparePassword(password);
+
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid password');
+    }
+    return user;
   }
 
   async findAll(): Promise<User[]> {

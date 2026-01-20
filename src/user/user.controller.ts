@@ -35,4 +35,8 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @Post('login')
+  async login(@Body() loginDto: { username: string, password: string }) {
+    return this.userService.validatePassword(loginDto.username, loginDto.password);
+  }
 }
